@@ -11,26 +11,28 @@ def preprocess_image(frame):
     blurred=cv2.GaussianBlur(gray,(5,5),0)
     _,binary=cv2.threshold(blurred,90,255,cv2.THRESH_BINARY_INV)
     return binary 
+    
 def get_roi(binary_image):
     """获取感兴趣区域"""
     roi = binary_image[0:96, 0:320]
     return roi
+    
 def find_lane_center(roi):
     """查找车道中线"""
     column_sums = np.sum(roi, axis=0) / 255
     nonzero_indices = np.where(column_sums > 6)[0]
         
     if len(nonzero_indices) == 0:
-        return None
-        
+        return None     
     left_bound = nonzero_indices[0]
     right_bound = nonzero_indices[-1]
     lane_center = (left_bound + right_bound) // 2
         
     full_center_x = lane_center
-    full_center_y = 0 + 96 // 2
-        
+    full_center_y = 0 + 96 // 2   
     return (left_bound,right_bound,lane_center)
+
+
 def cleanup():
     #清理资源
     car.Car_Stop()
