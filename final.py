@@ -1,19 +1,21 @@
 import PID_Control
-import Camera_init
+import Camera
 from Car_Control import Car
 import cv2
+import time
+
 
 
 
 def cleanup():
     #清理资源
-    Car.Car_Stop()
+    car.Car_Stop()
     picam2.stop()
     cv2.destroyAllWindows()
     print("资源清理完成")
 
 #开启摄像头
-picam2=Camera_init.Start()
+picam2=Camera.init_camera()
 
 #初始化小车
 car=Car()
@@ -29,8 +31,10 @@ while 1:
     
     
     #转向调节
-    PID_Control.PID_Turn(left_x,right_x,offsets,left_lane_sum,right_lane_sum)
-    
+    PID_Control.PID_Turn(left_x,right_x,offsets,left_lane_sum=0,right_lane_sum=0)
+    if cv2.waitKey(0) and 0xFF==ord('q'):
+        break
+    time.sleep(0.01)
 
 #释放
 cleanup()
