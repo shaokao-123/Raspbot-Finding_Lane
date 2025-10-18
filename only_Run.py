@@ -9,11 +9,17 @@ from picamera2 import Picamera2
 _device = None
 _addr = 0x16
 
+def Control_Servo(id1,angle1,id2,angle2):
+    #舵机角度控制
+    write_array(0x03,[id1,angle1])
+    write_array(0x03,[id2,angle2])
+
 def car_init():
     """初始化小车"""
     global _device, _addr
     try:
         _device = smbus.SMBus(1)
+        Control_Servo(1,90,2,158)
         print("小车初始化成功")
     except Exception as e:
         print(f'I2C初始化错误: {e}')
@@ -324,4 +330,5 @@ if __name__ == "__main__":
     
     # 运行
     follower.run_autonomous(show_display=True)
+
     Car_Stop()
