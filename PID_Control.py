@@ -4,62 +4,43 @@ import time
 
 
 global Z_axis_pid
-Z_axis_pid = PID.PositionalPID(0.5, 0, 1) 
-global prev_left
-prev_left = 0
-global prev_right
-prev_right = 0
+Z_axis_pid = PID.PositionalPID(0.6, 0, 1) 
 car=Car_Control.Car()
-def PID_Turn(left_x,right_x,offsets,left_lane_sum,right_lane_sum):
-    global prev_left, prev_right
+def PID_Turn(center_x,camera_width):
     global Z_axis_pid
-    
+    sum1=0
+    offsets=camera_width*0.5-center_x
     #转向角PID调节
     Z_axis_pid.SystemOutput=offsets
     Z_axis_pid.SetStepSignal(0)
-    Z_axis_pid.SetInertiaTime(0.3,0.1)
+    Z_axis_pid.SetInertiaTime(0.4,0.1)
     
     if Z_axis_pid.SystemOutput>60:#调节最大幅度
         Z_axis_pid.SystemOutput=60
-    elif Z_axis_pid.SystemOutput<60:
-        Z_axis_pid.SystemOutput=60
+    elif Z_axis_pid.SystemOutput<-60:
+        Z_axis_pid.SystemOutput=-60
     
 
     
-    if left_x==0 and right_x==319:
-        if prev_left>prev_right:
+    if offsets>3 and offsets<500:
+        sum1+=1
+        if offsets>120:
             car.Dir_Car(-70,60)
-        elif prev_left<prev_right:
+            
+        else:
+            car.Dir_Car(60-int(Z_axis_pid.SystemOutput),60+int(Z_axis_pid.SystemOutput))
+        time.sleep(0.001)
+            
+    elif offsets<-3 and offsets>-500:
+        if offsets<-120:
             car.Dir_Car(60,-70)
+
+        else:
+            car.Dir_Car(60-int(Z_axis_pid.SystemOutput),60+int(Z_axis_pid.SystemOutput))
+        time.sleep(0.001)
         
-        prev_left=0
-        prev_right=0
+    elif offsets<-500 or offsets>500:
+        car.Car_Stop()
         
     else:
-        if offsets>3:
-            if offsets>120:
-                car.Dir_Car(-70,60)
-                prev_left=0
-                prev_right=0
-            else:
-                car.Dir_Car(45+int(Z_axis_pid.SystemOutput),45-int(Z_axis_pid.SystemOutput))
-            time.sleep(0.001)
-            
-        elif offsets>3:
-            if offsets<-120:
-                car.Dir_Car(60,-70)
-                prev_left=0
-                prev_right=0
-            else:
-                car.Dir_Car(45+int(Z_axis_pid.SystemOutput),45-int(Z_axis_pid.SystemOutput))
-            time.sleep(0.001)
-        
-        else:
-            car.Car_Run(25,25)    
-    
-    if left_lane_sum != right_lane_sum:
-        if left_lane_sum < right_lane_sum:
-            prev_left = prev_left + 1
-        elif right_lane_sum < left_lane_sum:
-            prev_right = prev_right + 1
-        
+        car.Car_Run(50,50)    

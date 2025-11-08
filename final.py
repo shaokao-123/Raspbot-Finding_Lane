@@ -3,9 +3,8 @@ import Camera
 from Car_Control import Car
 import cv2
 import time
-from Inverse_Perspective_Mapping import inverse_perspective_mapping
-
-
+import image
+from ctype import detect_lane_center
 
 def cleanup():
     #清理资源
@@ -21,22 +20,24 @@ picam2=Camera.init_camera()
 car=Car()
 
 while 1:
+    
     #获取图像
-    frame=picam2.capture_array()
+    frame = picam2.capture_array()
     
     #图像处理
-    """透视变换"""
-    birdseye_view=inverse_perspective_mapping(frame)
-    
+    birdseye_view = image.inverse_perspective(frame)
+    binary = image.preprocess_image(birdseye_view)
+    roi = image.get_roi(binary)
     
     #中线检测
     
+    center_x,center_y=detect_lane_center(roi)
     
     #转向调节
-    PID_Control.PID_Turn(left_x,right_x,offsets,left_lane_sum=0,right_lane_sum=0)
-    if cv2.waitKey(0) and 0xFF==ord('q'):
+    PID_Control.PID_Turn(center_x,320)
+    
+    if cv2.waitKey(1) and 0xFF==ord('q'):
         break
-    time.sleep(0.01)
-
+    time.sleep(0.001)
 #释放
 cleanup()
