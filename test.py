@@ -1,8 +1,8 @@
-import image
+import visual.image
 import cv2
 #from ctype import detect_lane_center
 import numpy as np
-import LCL2
+import visual.LCL2 as LCL2
 
 def detect_lane_center(roi):
     lcl_detector = LCL2.LaneCalculator(width=roi.shape[1], height=roi.shape[0])
