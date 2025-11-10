@@ -26,7 +26,7 @@ def cleanup():
     print("资源清理完成")
 
 #开启摄像头
-picam2=Camera.init_camera()
+picam2=init_camera()
 
 #初始化小车
 car=Car()
