@@ -23,21 +23,27 @@ while 1:
     
     #获取图像
     frame = picam2.capture_array()
+    #cv2.imshow('camera',frame)
     
     #图像处理
     birdseye_view = image.inverse_perspective(frame)
-    binary = image.preprocess_image(birdseye_view)
+    binary = image.preprocess_image(birdseye_view,70)
     roi = image.get_roi(binary)
-    
+    cv2.imshow('binary',binary)
     #中线检测
-    
-    center_x,center_y=detect_lane_center(roi)
+    resized=cv2.resize(binary,(320,240))
+    cv2.imshow('resized',resized)
+    center_x,center_y=detect_lane_center(resized)
+    offsets = -159 + center_x
+    print(f"center_x:{center_x},offsets:{offsets}")
+    #offsets=159-int((left_x+right_x)*0.5)
     
     #转向调节
-    PID_Control.PID_Turn(center_x,320)
+    PID_Control.PID_Turn(offsets)
     
     if cv2.waitKey(1) and 0xFF==ord('q'):
         break
     time.sleep(0.001)
+    
 #释放
 cleanup()

@@ -1,6 +1,7 @@
 import smbus
 import math
 
+#基于I2C通信协议的小车控制
 class Car():
     
     def get_i2c_device(self,address,i2c_bus):
@@ -12,7 +13,7 @@ class Car():
         
     def __init__(self):
         self._device=self.get_i2c_device(0x16,1)
-        self.Ctrl_Servo(1,158,2,90)
+        self.Ctrl_Servo(1,135,2,90)
     
     def write_u8(self,reg,data):
         try:
@@ -56,7 +57,7 @@ class Car():
         
     def Car_Run(self,speed1,speed2):
         try:
-            self.Ctrl(1,speed1,1,speed2)
+            self.Ctrl_Car(1,speed1,1,speed2)
         except:
             print('Car_Run I2C error')
         

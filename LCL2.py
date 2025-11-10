@@ -30,8 +30,8 @@ class LaneCalculator:
         
         # 检测边缘
         edges = self.detect_edges_with_opencv(binary_image)
-        cv2.imshow("Edges", edges)
-        cv2.waitKey(0)
+        #cv2.imshow("Edges", edges)
+        #cv2.waitKey(0)
         # 提取车道边缘
         left_edges, right_edges = self.extract_lane_edges(edges)
         
@@ -155,7 +155,6 @@ def calculate_lane_center(image_data, width, height):
         # 计算车道中心
         calculator = LaneCalculator(width, height)
         result = calculator.calculate_lane_center(binary_image)
-        
         if result.detected:
             return (result.center_x, result.center_y, True)
         else:

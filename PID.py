@@ -1,3 +1,4 @@
+#通用PID控制模版
 class IncrementalPID:
     def __init__(self, P, I, D):
         self.Kp = P

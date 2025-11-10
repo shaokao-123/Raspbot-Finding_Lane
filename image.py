@@ -12,15 +12,15 @@ def inverse_perspective(image):
     numpy.ndarray: The transformed bird's-eye view image.
     """
     # Define source and destination points for perspective transformation
-    srcPt1 = (600 * 6.25 / 16.5, 400)
-    srcPt2 = (600 * 9.4 / 16.5, 400)
-    srcPt3 = (600 * 6.5 / 16.5, 0)
-    srcPt4 = (600 * 8.6 / 16.5, 0)
+    srcPt1 = (120, 240)
+    srcPt2 = (210, 240)
+    srcPt3 = (190, 0)
+    srcPt4 = (140, 0)
 
-    dstPts1 = (220, 350)
-    dstPts2 = (380, 350)
-    dstPts3 = (220, 0)
-    dstPts4 = (380, 0)
+    dstPts1 = (120, 240)
+    dstPts2 = (210, 240)
+    dstPts3 = (210, 0)
+    dstPts4 = (120, 0)
 
     srcPts = np.float32([srcPt1, srcPt2, srcPt3, srcPt4])
     dstPts = np.float32([dstPts1, dstPts2, dstPts3, dstPts4])
@@ -36,18 +36,18 @@ def inverse_perspective(image):
     
     return birdseye_view
     
-
-def preprocess_image(image):
+#图像预处理
+def preprocess_image(image,threshold):
     
     gray=cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
     blurred=cv2.GaussianBlur(gray,(5,5),0)
-    _,binary=cv2.threshold(blurred,90,255,cv2.THRESH_BINARY_INV)
+    _,binary=cv2.threshold(blurred,threshold,255,cv2.THRESH_BINARY_INV)
     
     return binary
     
-    
+ #获取感兴趣区域   
 def get_roi(image):
     
-    roi = image[0:96,0:320]
+    roi = image[144:240,0:320]
     
     return roi

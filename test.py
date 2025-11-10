@@ -14,8 +14,7 @@ with open("./results/warped_0007.jpg", "rb") as f:
     img = cv2.imdecode(np.frombuffer(img_data, np.uint8), cv2.IMREAD_COLOR)
     birdseye_view = image.inverse_perspective(img)
     binary = image.preprocess_image(birdseye_view)
-    #roi = image.get_roi(binary)
-    roi = binary
+    roi = image.get_roi(binary)
     result = detect_lane_center(roi)
     center_x, center_y = result[0], result[1]
     print(f"Detected lane center at: ({center_x}, {center_y})")
